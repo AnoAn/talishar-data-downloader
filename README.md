@@ -2,7 +2,7 @@
 
 A simple Python tool to download Flesh and Blood game data from Talishar.
 
-## 🚀 Quick Start (3 Steps)
+## 🚀 Quick Start (4 Steps)
 
 ### 1. Get Your API Key
 Contact the repository maintainer to get your API key.
@@ -21,11 +21,21 @@ cp .env.example .env
 # Edit .env and add your API key
 ```
 
-### 3. Download Data
+### 3. Choose Your Format and Dates
+Open `examples/simple_download.py` and modify these lines:
+```python
+START_DATE = "2025-01-01"  # Your start date
+END_DATE = "2025-01-03"    # Your end date  
+FORMAT_CODE = "0"          # Game format (see table below)
+```
+
+### 4. Download Data
 ```bash
 # Run the simple example
 python examples/simple_download.py
 ```
+
+That's it! Your data will be saved in the `data/` folder.
 
 
 ## 📁 What's Included
