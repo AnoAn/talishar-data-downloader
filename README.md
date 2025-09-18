@@ -34,7 +34,6 @@ python examples/simple_download.py
 fab-talishar-data-download/
 ├── examples/
 │   ├── simple_download.py      # 👈 Start here! Easy to copy and modify
-│   └── advanced_download.py    # More examples for power users
 ├── src/
 │   └── talishar_downloader/    # The main code (you don't need to touch this)
 ├── data/                       # Your downloaded files go here
@@ -216,14 +215,6 @@ Always use `YYYY-MM-DD` format:
 ### "Download failed"
 - Check your internet connection
 - The download URL might have expired (try again)
-
-## 🔧 Advanced Usage
-
-Check out `examples/advanced_download.py` for:
-- Downloading multiple formats at once
-- Historical data downloads
-- Custom file naming
-- Error handling examples
 
 ## 📋 Requirements
 
