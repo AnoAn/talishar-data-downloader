@@ -1,6 +1,6 @@
 # Flesh and Blood Talishar Data Downloader
 
-A simple Python tool to download Flesh and Blood game data from Talishar. Perfect for beginners and data analysts who want to access game results data.
+A simple Python tool to download Flesh and Blood game data from Talishar.
 
 ## 🚀 Quick Start (3 Steps)
 
@@ -101,6 +101,68 @@ success = downloader.download_data(
 
 if success:
     print("Download complete!")
+```
+
+### Option 3: Direct API Calls
+
+If you want to call the API directly without using the Python library:
+
+#### cURL Examples
+
+**Download Classic Constructed data for a date range:**
+```bash
+# Step 1: Get download URL
+curl -X GET "https://fab-insights.azurewebsites.net/api/get_results_blob?format=0&start_date=2025-01-01&end_date=2025-01-03" \
+     -H "x-functions-key: YOUR_API_KEY" \
+     --output response.json
+
+# Step 2: Extract download URL from response and download CSV
+DOWNLOAD_URL=$(cat response.json | grep -o '"download_url":"[^"]*"' | cut -d'"' -f4)
+curl -X GET "$DOWNLOAD_URL" --output talishar_data.csv
+```
+
+**Download Blitz data for last 3 days:**
+```bash
+curl -X GET "https://fab-insights.azurewebsites.net/api/get_results_blob?format=2&days=3" \
+     -H "x-functions-key: YOUR_API_KEY" \
+     --output response.json
+```
+
+
+#### Python requests Example
+
+```python
+import requests
+
+# Your API key
+api_key = "YOUR_API_KEY"
+
+# Step 1: Get download URL
+response = requests.get(
+    "https://fab-insights.azurewebsites.net/api/get_results_blob",
+    params={
+        "format": "0",  # Classic Constructed
+        "start_date": "2025-01-01",
+        "end_date": "2025-01-03"
+    },
+    headers={"x-functions-key": api_key}
+)
+
+if response.status_code == 200:
+    data = response.json()
+    download_url = data["download_url"]
+    
+    # Step 2: Download CSV
+    csv_response = requests.get(download_url)
+    
+    if csv_response.status_code == 200:
+        with open("talishar_data.csv", "wb") as f:
+            f.write(csv_response.content)
+        print("Data downloaded successfully!")
+    else:
+        print("Failed to download CSV")
+else:
+    print(f"API Error: {response.status_code}")
 ```
 
 ## 📊 What Data Do You Get?
