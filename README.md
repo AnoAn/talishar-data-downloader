@@ -1,0 +1,185 @@
+# Flesh and Blood Talishar Data Downloader
+
+A simple Python tool to download Flesh and Blood game data from Talishar. Perfect for beginners and data analysts who want to access game results data.
+
+## 🚀 Quick Start (3 Steps)
+
+### 1. Get Your API Key
+Contact the repository maintainer to get your API key.
+
+### 2. Set Up the Project
+```bash
+# Download this repository
+git clone https://github.com/yourusername/fab-talishar-data-download.git
+cd fab-talishar-data-download
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Set up your API key
+cp .env.example .env
+# Edit .env and add your API key
+```
+
+### 3. Download Data
+```bash
+# Run the simple example
+python examples/simple_download.py
+```
+
+
+## 📁 What's Included
+
+```
+fab-talishar-data-download/
+├── examples/
+│   ├── simple_download.py      # 👈 Start here! Easy to copy and modify
+│   └── advanced_download.py    # More examples for power users
+├── src/
+│   └── talishar_downloader/    # The main code (you don't need to touch this)
+├── data/                       # Your downloaded files go here
+├── .env.example               # Template for your API key
+├── requirements.txt           # Python dependencies
+└── README.md                 # This file
+```
+
+## 🎮 Game Formats
+
+Choose any format you want:
+
+| Code | Format Name |
+|------|---------|
+| "0" | Classic Constructed (CC) |
+| "1" | Competitive CC |
+| "2" | Blitz |
+| "3" | Competitive Blitz |
+| "4" | Open Format CC |
+| "5" | Commoner |
+| "6" | Sealed |
+| "7" | Draft |
+| "8" | Living Legend CC |
+| "9" | Living Legend Blitz |
+| "10" | Open Format Blitz |
+| "11" | Open Format Living Legend CC |
+| "12" | Open Format Living Legend Blitz |
+| "-1" | Clash |
+
+## 📝 How to Use
+
+### Option 1: Copy the Simple Script
+
+1. Open `examples/simple_download.py`
+2. Change these lines to what you want:
+   ```python
+   START_DATE = "2025-01-01"  # Your start date
+   END_DATE = "2025-01-03"    # Your end date  
+   FORMAT_CODE = "0"          # Format code (see table above)
+   ```
+3. Run: `python examples/simple_download.py`
+
+### Option 2: Use the Code in Your Own Script
+
+```python
+from src.talishar_downloader import TalisharDownloader
+import os
+from dotenv import load_dotenv
+
+# Load your API key
+load_dotenv()
+api_key = os.getenv("FUNCTION_API_KEY")
+
+# Create downloader
+downloader = TalisharDownloader(api_key)
+
+# Download data
+success = downloader.download_data(
+    start_date="2025-01-01",
+    end_date="2025-01-03", 
+    format_code="0",  # Classic Constructed
+    output_dir="my_data"
+)
+
+if success:
+    print("Download complete!")
+```
+
+## 📊 What Data Do You Get?
+
+Each CSV file contains:
+- `game_id`: Unique game identifier
+- `format`: Game format code
+- `deck1_json`: First player's deck (JSON)
+- `deck2_json`: Second player's deck (JSON) 
+- `player1_name`: First player's name
+- `player2_name`: Second player's name
+- `created_at`: When the game was played
+- `deck1_id_hash`: Hashed deck ID
+- `deck2_id_hash`: Hashed deck ID
+
+## ⚙️ Configuration
+
+### Setting Your API Key
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and add your API key:
+   ```
+   FUNCTION_API_KEY=your_actual_api_key_here
+   ```
+
+### Date Format
+Always use `YYYY-MM-DD` format:
+- ✅ `"2025-01-15"`
+- ❌ `"1/15/2025"` or `"15-01-2025"`
+
+## 🆘 Troubleshooting
+
+### "FUNCTION_API_KEY not found"
+- Make sure you created a `.env` file
+- Check that your API key is correct
+- Make sure there are no extra spaces in your `.env` file
+
+### "API Error: 401" 
+- Your API key is wrong or expired
+- Contact the maintainer for a new key
+
+### "No data found"
+- Try a different date range
+- Check that the format code is correct
+- Make sure there were games played on those dates
+
+### "Download failed"
+- Check your internet connection
+- The download URL might have expired (try again)
+
+## 🔧 Advanced Usage
+
+Check out `examples/advanced_download.py` for:
+- Downloading multiple formats at once
+- Historical data downloads
+- Custom file naming
+- Error handling examples
+
+## 📋 Requirements
+
+- Python 3.7 or higher
+- Internet connection
+- Valid API key
+
+## 🤝 Getting Help
+
+1. Check the examples in the `examples/` folder
+2. Look at the error messages - they usually tell you what's wrong
+3. Contact the repository maintainer for API key issues
+
+## 📄 License
+
+This project is for educational and research purposes. Please respect data usage terms and privacy considerations.
+This API is in no way affiliated with Legend Story Studios®. Flesh and Blood™ is a registered trademark of Legend Story Studios.
+
+---
+
+**Ready to download Flesh and Blood data?** Start with `examples/simple_download.py`! 🎉
