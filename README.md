@@ -71,6 +71,7 @@ Choose any format you want:
 | "10" | Open Format Blitz |
 | "11" | Open Format Living Legend CC |
 | "12" | Open Format Living Legend Blitz |
+| "13" | Competitive LL |
 | "-1" | Clash |
 
 ## 📝 How to Use
