@@ -72,6 +72,8 @@ Choose any format you want:
 | "11" | Open Format Living Legend CC |
 | "12" | Open Format Living Legend Blitz |
 | "13" | Competitive LL |
+| "14" | Silver Age |
+| "15" | Competitive Silver Age |
 | "-1" | Clash |
 
 ## 📝 How to Use
