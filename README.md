@@ -1,4 +1,4 @@
-# Flesh and Blood Talishar Data Downloader
+# FaB Insights Talishar Data Downloader
 
 A **community-supported** Python tool to download public Flesh and Blood game data from [Talishar](https://talishar.net).
 
@@ -256,8 +256,10 @@ Always use `YYYY-MM-DD` format:
 ## 📄 License
 
 This project is for educational and research purposes. Please respect data usage terms and privacy considerations.
-This API is in no way affiliated with Legend Story Studios®. Flesh and Blood™ is a registered trademark of Legend Story Studios.
+This API is in no way affiliated with Legend Story Studios.  
+Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios.  
+Flesh and Blood characters, cards, logos, and art are property of Legend Story Studios.
 
 ---
 
-**Ready to download Flesh and Blood data?** Start with `examples/simple_download.py`! 🎉
+**Ready to download data?** Start with `examples/simple_download.py`! 🎉
