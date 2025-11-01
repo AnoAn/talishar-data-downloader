@@ -1,11 +1,21 @@
 # Flesh and Blood Talishar Data Downloader
 
-A simple Python tool to download Flesh and Blood game data from Talishar.
+A **community-supported** Python tool to download public Flesh and Blood game data from [Talishar](https://talishar.net).
+
+> **No data is sold.** This project runs on **voluntary cost-sharing** via [Metafy](https://metafy.gg/@fabinsights) — to cover the server costs (Azure for the API + Hetzner for hosting the database).  
+> Every supporter keeps the data flowing for the entire FaB community.
+
+---
 
 ## 🚀 Quick Start (4 Steps)
 
-### 1. Get Your API Key
-Contact the repository maintainer to get your API key.
+### 1. Reach out via Metafy
+Support the project and get your **personal API key**:
+👉 [**Join on Metafy →**](https://metafy.gg/@fabinsights)
+
+Fill this quick form **after joining** to help me keep track where the keys are going:
+[Submit Email, Username, purpose →](https://forms.gle/dPkc5iUeiS8DzL4W8)
+
 
 ### 2. Set Up the Project
 ```bash
@@ -87,6 +97,8 @@ Choose any format you want:
    END_DATE = "2025-01-03"    # Your end date  
    FORMAT_CODE = "0"          # Format code (see table above)
    ```
+   _Note:_ max 3 days per call.
+
 3. Run: `python examples/simple_download.py`
 
 ### Option 2: Use the Code in Your Own Script
@@ -184,8 +196,8 @@ Each CSV file contains:
 - `format`: Game format code
 - `deck1_json`: First player's deck (JSON)
 - `deck2_json`: Second player's deck (JSON) 
-- `player1_name`: First player's name
-- `player2_name`: Second player's name
+- `player1_name`: First player's name (hashed)
+- `player2_name`: Second player's name (hashed)
 - `created_at`: When the game was played
 - `deck1_id_hash`: Hashed deck ID
 - `deck2_id_hash`: Hashed deck ID
