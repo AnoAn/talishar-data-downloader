@@ -5,6 +5,8 @@ A **community-supported** Python tool to download public Flesh and Blood game da
 > **No data is sold.** This project runs on **voluntary cost-sharing** via [Metafy](https://metafy.gg/@fabinsights) — to cover the server costs (Azure for the API + Hetzner for hosting the database).  
 > Every supporter keeps the data flowing for the entire FaB community.
 
+> **📅 Data Availability:** The database contains game data from **June 2025** onwards. Make sure to use dates from June 2025 or later when requesting data.
+
 ---
 
 ## 🚀 Quick Start (4 Steps)
@@ -34,8 +36,8 @@ cp .env.example .env
 ### 3. Choose Your Format and Dates
 Open `examples/simple_download.py` and modify these lines:
 ```python
-START_DATE = "2025-01-01"  # Your start date
-END_DATE = "2025-01-03"    # Your end date  
+START_DATE = "2025-06-05"  # Your start date (data available from June 2025)
+END_DATE = "2025-06-08"    # Your end date  
 FORMAT_CODE = "0"          # Game format (see table below)
 ```
 
@@ -93,11 +95,11 @@ Choose any format you want:
 1. Open `examples/simple_download.py`
 2. Change these lines to what you want:
    ```python
-   START_DATE = "2025-01-01"  # Your start date
-   END_DATE = "2025-01-03"    # Your end date  
+   START_DATE = "2025-06-05"  # Your start date (data available from June 2025)
+   END_DATE = "2025-06-08"    # Your end date  
    FORMAT_CODE = "0"          # Format code (see table above)
    ```
-   _Note:_ max 3 days per call.
+   _Note:_ max 3 days per call. Data is available from June 2025 onwards.
 
 3. Run: `python examples/simple_download.py`
 
@@ -117,8 +119,8 @@ downloader = TalisharDownloader(api_key)
 
 # Download data
 success = downloader.download_data(
-    start_date="2025-01-01",
-    end_date="2025-01-03", 
+    start_date="2025-06-05",
+    end_date="2025-06-08", 
     format_code="0",  # Classic Constructed
     output_dir="my_data"
 )
@@ -136,7 +138,7 @@ If you want to call the API directly without using the Python library:
 **Download Classic Constructed data for a date range:**
 ```bash
 # Step 1: Get download URL
-curl -X GET "https://fab-insights.azurewebsites.net/api/get_results_blob?format=0&start_date=2025-01-01&end_date=2025-01-03" \
+curl -X GET "https://fab-insights.azurewebsites.net/api/get_results_blob?format=0&start_date=2025-06-05&end_date=2025-06-08" \
      -H "x-functions-key: YOUR_API_KEY" \
      --output response.json
 
@@ -166,8 +168,8 @@ response = requests.get(
     "https://fab-insights.azurewebsites.net/api/get_results_blob",
     params={
         "format": "0",  # Classic Constructed
-        "start_date": "2025-01-01",
-        "end_date": "2025-01-03"
+        "start_date": "2025-06-05",
+        "end_date": "2025-06-08"
     },
     headers={"x-functions-key": api_key}
 )
@@ -202,6 +204,73 @@ Each CSV file contains:
 - `deck1_id_hash`: Hashed deck ID
 - `deck2_id_hash`: Hashed deck ID
 
+### Example of a Game Row
+
+Example of a game row (deck and player IDs are hashed):
+
+```python
+game_data_example = {
+    "created_at": "2025-11-03 02:00:29",
+    
+    "deck1_id_hash": "8ce52e72ce8e23e9ba40e65b21cb74232ad01e5f683dab81552751cf61bf1c87",
+    "deck1_json": {
+        "turns": 5,
+        "gameId": 1457651,
+        "result": 0,
+        "winner": 2,
+        "gameName": "3046621",
+        "yourTime": "550",
+        "character": [
+            {"cardId": "cindra_dracai_of_retribution", "cardName": "Cindra, Dracai of Retribution", "numCopies": 1},
+            ...
+        ],
+        "cardResults": [
+            {"cardId": "ancestral_empowerment_red", "played": 0, "hits": 0},
+            ...
+        ],
+        "turnResults": {
+            "0": {"cardsUsed": 0, "damageDealt": 0, "damageTaken": 4},
+            ...
+        },
+        "playerHero": "cindra_dracai_of_retribution",
+        "opposingHero": "oscilio_constella_intelligence",
+        "totalDamageDealt": 36,
+        ...
+    },
+    
+    "deck2_id_hash": "f2a895bd5cebeaa146ae1ed87f2e29f3b40cc433e616715eb5954ceac1004c1f",
+    "deck2_json": {
+        "turns": 5,
+        "gameId": 1457651,
+        "result": 1,
+        "winner": 2,
+        "gameName": "3046621",
+        "yourTime": "610",
+        "character": [
+            {"cardId": "oscilio_constella_intelligence", "cardName": "Oscilio, Constella Intelligence", "numCopies": 1},
+            ...
+        ],
+        "cardResults": [
+            {"cardId": "blast_to_oblivion_red", "played": 0, "hits": 0},
+            ...
+        ],
+        "turnResults": {
+            "0": {"cardsUsed": 2, "damageDealt": 4, "damageTaken": 0},
+            ...
+        },
+        "playerHero": "oscilio_constella_intelligence",
+        "opposingHero": "cindra_dracai_of_retribution",
+        "totalDamageDealt": 40,
+        ...
+    },
+    
+    "format": 0,
+    "game_id": 1457651,
+    "player1_name": "f3c0a079f77d425787e0b4d875858c22fe855326f94010026cd13f043b38cad9",
+    "player2_name": "5bc1c30eaab47dc8c6cf5878a98f79279850f34a2bc0d7de30613777675967f6"
+}
+```
+
 ## ⚙️ Configuration
 
 ### Setting Your API Key
@@ -218,8 +287,10 @@ Each CSV file contains:
 
 ### Date Format
 Always use `YYYY-MM-DD` format:
-- ✅ `"2025-01-15"`
+- ✅ `"2025-06-15"`
 - ❌ `"1/15/2025"` or `"15-01-2025"`
+
+**Important:** The database contains data from **June 2025** onwards. Use dates from June 2025 or later.
 
 ## 🆘 Troubleshooting
 
@@ -233,6 +304,7 @@ Always use `YYYY-MM-DD` format:
 - Contact the maintainer for a new key
 
 ### "No data found"
+- **Make sure your dates are from June 2025 or later** (data is available from June 2025 onwards)
 - Try a different date range
 - Check that the format code is correct
 - Make sure there were games played on those dates

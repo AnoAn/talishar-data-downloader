@@ -33,7 +33,7 @@ def main() -> None:
     downloader = TalisharDownloader(api_key)
 
     # ===== CONFIGURATION - MODIFY THESE VALUES =====
-    START_DATE = "2025-09-02"  # Change this to your desired start date
+    START_DATE = "2025-09-02"  # Change this to your desired start date (data available from June 2025 onwards)
     END_DATE = "2025-09-03"  # Change this to your desired end date
     FORMAT_CODE = "0"  # Change this to your desired format (see list below)
     OUTPUT_DIR = "data"  # Directory to save the downloaded file
