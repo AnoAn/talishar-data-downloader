@@ -33,17 +33,19 @@ cp .env.example .env
 # Edit .env and add your API key
 ```
 
-### 3. Choose Your Format and Dates
-Open `examples/simple_download.py` and modify these lines:
+### 3. Choose Your Format and Date
+Open `examples/download_csv_single_day.py` and modify these lines:
 ```python
-START_DATE = "2025-06-05"  # Your start date (data available from June 2025)
-END_DATE = "2025-06-08"    # Your end date  
-FORMAT_CODE = "0"          # Game format (see table below)
+DATE = "2025-09-02"  # Your date (data available from June 2025)
+FORMAT_CODE = "0"    # Game format (see table below)
 ```
 
 ### 4. Download Data
 ```bash
-# Run the simple example
+# Run the new example (recommended)
+python examples/download_csv_single_day.py
+
+# Or use the legacy date range example
 python examples/simple_download.py
 ```
 
@@ -55,13 +57,80 @@ That's it! Your data will be saved in the `data/` folder.
 ```
 fab-talishar-data-download/
 ├── examples/
-│   ├── simple_download.py      # 👈 Start here! Easy to copy and modify
+│   ├── download_csv_single_day.py  # 👈 NEW! Recommended - Single day CSV downloads
+│   ├── simple_download.py          # Legacy - Date range downloads
 ├── src/
 │   └── talishar_downloader/    # The main code (you don't need to touch this)
 ├── data/                       # Your downloaded files go here
 ├── .env.example               # Template for your API key
 ├── requirements.txt           # Python dependencies
 └── README.md                 # This file
+```
+
+## 🆕 New API Endpoint (Recommended)
+
+> **We're moving to a new API!** The new `/download_csv` endpoint provides pre-generated CSV files for single-day downloads. This is faster and more efficient. The legacy API (`/get_results_blob`) is still available but we recommend migrating to the new endpoint.
+
+### New API: `/v1/download_csv`
+
+The new endpoint provides pre-generated CSV files for a single day. It accepts:
+- `format` (optional): Game format identifier (e.g., "0", "1", "2"). Defaults to "0"
+- `date` (optional): Date in YYYY-MM-DD format (e.g., "2025-09-02"). If not provided, returns the latest available date for the format
+
+**Response includes:**
+- `download_url`: Temporary SAS URL for downloading the CSV file
+- `expires_at`: ISO 8601 timestamp when the URL expires
+- `blob_name`: Name of the blob file
+- `format`: Game format identifier
+- `date`: Requested or latest available date
+- `version`: API version
+
+**Quick Start with New API:**
+
+```bash
+# Use the new example script
+python examples/download_csv_single_day.py
+```
+
+Or modify the script:
+```python
+DATE = "2025-09-02"  # Single date
+FORMAT_CODE = "0"    # Format code
+```
+
+**Direct API Call Example:**
+
+```python
+import requests
+
+api_key = "YOUR_API_KEY"
+response = requests.get(
+    "https://fab-insights.azurewebsites.net/api/v1/download_csv",
+    params={"format": "0", "date": "2025-09-02"},
+    headers={"x-functions-key": api_key}
+)
+
+if response.status_code == 200:
+    data = response.json()
+    download_url = data["download_url"]
+    
+    # Download the CSV
+    csv_response = requests.get(download_url)
+    with open("talishar_data.csv", "wb") as f:
+        f.write(csv_response.content)
+```
+
+**cURL Example:**
+
+```bash
+# Get download URL
+curl -X GET "https://fab-insights.azurewebsites.net/api/v1/download_csv?format=0&date=2025-09-02" \
+     -H "x-functions-key: YOUR_API_KEY" \
+     --output response.json
+
+# Extract and download CSV
+DOWNLOAD_URL=$(cat response.json | grep -o '"download_url":"[^"]*"' | cut -d'"' -f4)
+curl -X GET "$DOWNLOAD_URL" --output talishar_data.csv
 ```
 
 ## 🎮 Game Formats
@@ -90,7 +159,50 @@ Choose any format you want:
 
 ## 📝 How to Use
 
-### Option 1: Copy the Simple Script
+### Option 1: New API - Single Day CSV (Recommended)
+
+1. Open `examples/download_csv_single_day.py`
+2. Change these lines to what you want:
+   ```python
+   DATE = "2025-09-02"  # Single date (data available from June 2025)
+   FORMAT_CODE = "0"    # Format code (see table above)
+   ```
+   _Note:_ Downloads pre-generated CSV for a single day. If date is not provided, returns the latest available date for the format.
+
+3. Run: `python examples/download_csv_single_day.py`
+
+### Option 2: Use the New API in Your Own Script
+
+```python
+import requests
+import os
+from dotenv import load_dotenv
+
+# Load your API key
+load_dotenv()
+api_key = os.getenv("FUNCTION_API_KEY")
+
+# Get download URL from new endpoint
+response = requests.get(
+    "https://fab-insights.azurewebsites.net/api/v1/download_csv",
+    params={"format": "0", "date": "2025-11-20"},
+    headers={"x-functions-key": api_key}
+)
+
+if response.status_code == 200:
+    data = response.json()
+    download_url = data["download_url"]
+    
+    # Download the CSV
+    csv_response = requests.get(download_url)
+    with open("talishar_data.csv", "wb") as f:
+        f.write(csv_response.content)
+    print("Download complete!")
+```
+
+### Option 3: Legacy API - Date Range Downloads
+
+> **Note:** The legacy API is still available but we recommend using the new `/download_csv` endpoint for single-day downloads. The legacy API is useful if you need date ranges.
 
 1. Open `examples/simple_download.py`
 2. Change these lines to what you want:
@@ -103,7 +215,7 @@ Choose any format you want:
 
 3. Run: `python examples/simple_download.py`
 
-### Option 2: Use the Code in Your Own Script
+Or use the Python library:
 
 ```python
 from src.talishar_downloader import TalisharDownloader
@@ -129,11 +241,21 @@ if success:
     print("Download complete!")
 ```
 
-### Option 3: Direct API Calls
+---
 
-If you want to call the API directly without using the Python library:
+## 🔄 Legacy API Documentation
 
-#### cURL Examples
+> **Legacy API:** The `/get_results_blob` endpoint is still available but we're moving to the new `/download_csv` endpoint. This section is preserved for reference.
+
+### Legacy API: `/get_results_blob`
+
+The legacy endpoint supports date range queries. It accepts:
+- `format`: Game format identifier (e.g., "0", "1", "2")
+- `start_date`: Start date in YYYY-MM-DD format
+- `end_date`: End date in YYYY-MM-DD format (max 3 days per call)
+- `days`: Alternative to date range - number of days back from today
+
+#### Legacy cURL Examples
 
 **Download Classic Constructed data for a date range:**
 ```bash
@@ -154,8 +276,7 @@ curl -X GET "https://fab-insights.azurewebsites.net/api/get_results_blob?format=
      --output response.json
 ```
 
-
-#### Python requests Example
+#### Legacy Python requests Example
 
 ```python
 import requests
@@ -334,4 +455,4 @@ Flesh and Blood characters, cards, logos, and art are property of Legend Story S
 
 ---
 
-**Ready to download data?** Start with `examples/simple_download.py`! 🎉
+**Ready to download data?** Start with `examples/download_csv_single_day.py`! 🎉
