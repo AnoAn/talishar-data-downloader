@@ -85,6 +85,8 @@ The new endpoint provides pre-generated CSV files for a single day. It accepts:
 - `date`: Requested or latest available date
 - `version`: API version
 
+> **📅 Current Day Updates:** For the current day only, data is updated hourly. If you query the same date multiple times throughout the day, the file will be updated with new data until midnight. After midnight, the data for that date becomes final and will no longer be updated.
+
 **Quick Start with New API:**
 
 ```bash
