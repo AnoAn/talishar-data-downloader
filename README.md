@@ -157,6 +157,7 @@ Choose any format you want:
 | "13" | Competitive LL |
 | "14" | Silver Age |
 | "15" | Competitive Silver Age |
+| "16" | Open Silver Age |
 | "-1" | Clash |
 
 ## 📝 How to Use
