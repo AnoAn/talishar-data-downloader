@@ -10,14 +10,21 @@ A **community-supported** Python tool to download public Flesh and Blood game da
 ---
 
 ## 🚀 Quick Start (4 Steps)
+### 1. Get API Access
 
-### 1. Reach out via Metafy
-Support the project and get your **personal API key**:
-👉 [**Join on Metafy →**](https://metafy.gg/@fabinsights)
+Support the project and get started with your **personal API key**:  
+👉 [**Join on Metafy →**](https://metafy.gg/@fabinsights)  
 
-Fill this quick form **after joining** to help me keep track where the keys are going:
+Your support helps cover server costs and keeps the API and data freely available for the community.
+
+**Supporters typically receive:**
+- Faster API key access  
+- Priority support  
+
+After reaching out, please fill this quick form so I can track usage and send your key:  
 [Submit Email, Username, purpose →](https://forms.gle/dPkc5iUeiS8DzL4W8)
 
+💡 API access is available to anyone interested - if you’re not supporting, just send me a message on Metafy and I’ll get you set up. Supporting simply helps prioritize requests and keep the service running.
 
 ### 2. Set Up the Project
 ```bash
@@ -336,7 +343,7 @@ Example of a game row (deck and player IDs are hashed):
 game_data_example = {
     "created_at": "2025-11-03 02:00:29",
     
-    "deck1_id_hash": "8ce52e72ce8e23e9ba40e65b21cb74232ad01e5f683dab81552751cf61bf1c87",
+    "deck1_id_hash": "8ce52e72ce8e23e9ba40e65b21cb74232ad01e5f683dab81552751cf61bf1c87", !THESE HAVE RECENTLY BEEN REMOVED!
     "deck1_json": {
         "turns": 5,
         "gameId": 1457651,
