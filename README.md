@@ -154,8 +154,8 @@ Choose any format you want:
 | "3" | Competitive Blitz |
 | "4" | Open Format CC |
 | "5" | Commoner |
-| "6" | Sealed |
-| "7" | Draft |
+| "6" | Sealed | ->> DISABLED
+| "7" | Draft | ->> DISABLED
 | "8" | Living Legend CC |
 | "9" | Living Legend Blitz |
 | "10" | Open Format Blitz |
