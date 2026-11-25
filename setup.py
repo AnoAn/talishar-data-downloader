@@ -13,6 +13,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The emoji in this script's messages crash on Windows when output is redirected
+# (to a file or another program): Python then writes in cp1252, which has no emoji.
+# Writing UTF-8 fixes that. Interactive terminals already handle emoji, so they're unaffected.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):  # missing in some notebooks/IDEs and before Python 3.7
+        _stream.reconfigure(encoding="utf-8")
+
 
 def run_command(command: str, description: str) -> bool:
     """Run a command and return True if successful."""

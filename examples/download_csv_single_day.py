@@ -21,6 +21,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.talishar_downloader import TalisharDownloader
 
+# The emoji in this script's messages crash on Windows when output is redirected
+# (to a file or another program): Python then writes in cp1252, which has no emoji.
+# Writing UTF-8 fixes that. Interactive terminals already handle emoji, so they're unaffected.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):  # missing in some notebooks/IDEs and before Python 3.7
+        _stream.reconfigure(encoding="utf-8")
+
 
 def download_csv_single_day(
     api_key: str, date: str, format_code: str = "0", output_dir: str = "data"

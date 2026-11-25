@@ -10,6 +10,14 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
+# The emoji in this script's messages crash on Windows when output is redirected
+# (to a file or another program): Python then writes in cp1252, which has no emoji.
+# Writing UTF-8 fixes that. Interactive terminals already handle emoji, so they're unaffected.
+# This must run before the import check below, which already prints.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):  # missing in some notebooks/IDEs and before Python 3.7
+        _stream.reconfigure(encoding="utf-8")
+
 # Add src to path so we can import our module
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
