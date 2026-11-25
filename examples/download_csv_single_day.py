@@ -5,11 +5,13 @@ Example script to download Talishar data for a single day using the new CSV endp
 This script uses the new /download_csv endpoint which provides pre-generated CSV files
 for a single day. This is the recommended approach going forward.
 
-Just change the date and format below!
+By default it downloads yesterday's games (the most recent complete day).
+Just change the format below, or set a specific date within the last 180 days.
 """
 
 import os
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 import requests
@@ -28,7 +30,7 @@ def download_csv_single_day(
 
     Args:
         api_key: Your API key
-        date: Date in YYYY-MM-DD format (e.g., "2025-09-02")
+        date: Date in YYYY-MM-DD format, within the last 180 days (e.g., "2026-11-20")
         format_code: Game format identifier (default: "0" for Classic Constructed)
         output_dir: Directory to save the downloaded file
 
@@ -98,7 +100,7 @@ def download_csv_single_day(
 
         elif response.status_code == 404:
             print(f"❌ CSV file not found for format {format_code} and date {date}")
-            print("   Make sure the date is valid and data exists for that date")
+            print("   Make sure the date is within the last 180 days and that games were played in that format on that day")
             return False
         elif response.status_code == 400:
             print(f"❌ Invalid parameters: {response.text}")
@@ -129,7 +131,12 @@ def main() -> None:
         return
 
     # ===== CONFIGURATION - MODIFY THESE VALUES =====
-    DATE = "2025-09-02"  # Change this to your desired date (data available from November 2025 onwards)
+    # Date: yesterday, by default. Today's file keeps changing until midnight UTC,
+    # so yesterday is the most recent complete day. It's computed in UTC because the
+    # data's days follow UTC, not your local time zone.
+    # To pick a specific day instead, use a date within the last 180 days:
+    #   DATE = "2026-11-20"
+    DATE = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
     FORMAT_CODE = "0"  # Change this to your desired format (see list below)
     OUTPUT_DIR = "data"  # Directory to save the downloaded file
     # ===============================================

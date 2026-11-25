@@ -5,7 +5,9 @@ A **community-supported** Python tool to download public Flesh and Blood game da
 > **No data is sold.** This project runs on **voluntary cost-sharing** via [Metafy](https://metafy.gg/@fabinsights) — to cover the server costs (Azure for the API + Hetzner for hosting the database).  
 > Every supporter keeps the data flowing for the entire FaB community.
 
-> **📅 Data Availability:** The database contains game data from **June 2025** onwards. Make sure to use dates from June 2025 or later when requesting data.
+> **📅 Data Availability:** You can download the **last 180 days** of games. That's plenty of data: Classic Constructed and Competitive CC alone have **more than 3,000 games per day**. Older games are archived, since meta changes make them less interesting for most analyses. If you need older data, [send me a message on Metafy](https://metafy.gg/@fabinsights).
+
+> **📦 Daily Download Limit:** Each API key can download up to **2 GB of CSV files per day** (resets at 00:00 UTC). That's roughly 15 full days of Classic Constructed.
 
 ---
 
@@ -41,9 +43,9 @@ cp .env.example .env
 ```
 
 ### 3. Choose Your Format and Date
-Open `examples/download_csv_single_day.py` and modify these lines:
+Open `examples/download_csv_single_day.py`. By default it downloads **yesterday's** games (the most recent complete day), so you only need to pick a format. To get a different day, set `DATE` to any date within the last 180 days:
 ```python
-DATE = "2025-09-02"  # Your date (data available from June 2025)
+DATE = "2026-11-20"  # Optional: defaults to yesterday (UTC)
 FORMAT_CODE = "0"    # Game format (see table below)
 ```
 
@@ -82,7 +84,7 @@ fab-talishar-data-download/
 
 The new endpoint provides pre-generated CSV files for a single day. It accepts:
 - `format` (optional): Game format identifier (e.g., "0", "1", "2"). Defaults to "0"
-- `date` (optional): Date in YYYY-MM-DD format (e.g., "2025-09-02"). If not provided, returns the latest available date for the format
+- `date` (optional): Date in YYYY-MM-DD format (e.g., "2026-11-20"), within the last 180 days. If not provided, returns the latest available date for the format
 
 **Response includes:**
 - `download_url`: Temporary SAS URL for downloading the CSV file
@@ -94,6 +96,8 @@ The new endpoint provides pre-generated CSV files for a single day. It accepts:
 
 > **📅 Current Day Updates:** For the current day only, data is updated hourly. If you query the same date multiple times throughout the day, the file will be updated with new data until midnight. After midnight, the data for that date becomes final and will no longer be updated.
 
+> **📦 Daily Download Limit:** Each API key can download up to **2 GB of CSV files per day**, and the counter resets at **00:00 UTC**. Every download link you request counts the file's full size, even if you request the same file twice, so keep the files you've downloaded instead of fetching them again. Once you're over the limit, the API responds with `429` until the reset.
+
 **Quick Start with New API:**
 
 ```bash
@@ -103,7 +107,7 @@ python examples/download_csv_single_day.py
 
 Or modify the script:
 ```python
-DATE = "2025-09-02"  # Single date
+DATE = "2026-11-20"  # Single date (within the last 180 days)
 FORMAT_CODE = "0"    # Format code
 ```
 
@@ -115,7 +119,7 @@ import requests
 api_key = "YOUR_API_KEY"
 response = requests.get(
     "https://fab-insights.azurewebsites.net/api/v1/download_csv",
-    params={"format": "0", "date": "2025-09-02"},
+    params={"format": "0", "date": "2026-11-20"},
     headers={"x-functions-key": api_key}
 )
 
@@ -133,7 +137,7 @@ if response.status_code == 200:
 
 ```bash
 # Get download URL
-curl -X GET "https://fab-insights.azurewebsites.net/api/v1/download_csv?format=0&date=2025-09-02" \
+curl -X GET "https://fab-insights.azurewebsites.net/api/v1/download_csv?format=0&date=2026-11-20" \
      -H "x-functions-key: YOUR_API_KEY" \
      --output response.json
 
@@ -172,9 +176,9 @@ Choose any format you want:
 ### Option 1: New API - Single Day CSV (Recommended)
 
 1. Open `examples/download_csv_single_day.py`
-2. Change these lines to what you want:
+2. Pick your format. The date defaults to yesterday (UTC), the most recent complete day; to choose another day, set it to any date within the last 180 days:
    ```python
-   DATE = "2025-09-02"  # Single date (data available from June 2025)
+   DATE = "2026-11-20"  # Optional: defaults to yesterday (UTC)
    FORMAT_CODE = "0"    # Format code (see table above)
    ```
    _Note:_ Downloads pre-generated CSV for a single day. If date is not provided, returns the latest available date for the format.
@@ -195,7 +199,7 @@ api_key = os.getenv("FUNCTION_API_KEY")
 # Get download URL from new endpoint
 response = requests.get(
     "https://fab-insights.azurewebsites.net/api/v1/download_csv",
-    params={"format": "0", "date": "2025-11-20"},
+    params={"format": "0", "date": "2026-11-20"},
     headers={"x-functions-key": api_key}
 )
 
@@ -217,11 +221,11 @@ if response.status_code == 200:
 1. Open `examples/simple_download.py`
 2. Change these lines to what you want:
    ```python
-   START_DATE = "2025-06-05"  # Your start date (data available from June 2025)
+   START_DATE = "2025-06-05"  # Your start date
    END_DATE = "2025-06-08"    # Your end date  
    FORMAT_CODE = "0"          # Format code (see table above)
    ```
-   _Note:_ max 3 days per call. Data is available from June 2025 onwards.
+   _Note:_ max 3 days per call. Only the last 180 days of data are available.
 
 3. Run: `python examples/simple_download.py`
 
@@ -418,10 +422,10 @@ game_data_example = {
 
 ### Date Format
 Always use `YYYY-MM-DD` format:
-- ✅ `"2025-06-15"`
+- ✅ `"2026-11-20"`
 - ❌ `"1/15/2025"` or `"15-01-2025"`
 
-**Important:** The database contains data from **June 2025** onwards. Use dates from June 2025 or later.
+**Important:** Only the **last 180 days** of data can be downloaded. For older data, [send me a message on Metafy](https://metafy.gg/@fabinsights).
 
 ## 🆘 Troubleshooting
 
@@ -434,8 +438,13 @@ Always use `YYYY-MM-DD` format:
 - Your API key is wrong or expired
 - Contact the maintainer for a new key
 
+### "API Error: 429"
+- You've reached the daily download limit (2 GB of CSV files per API key)
+- The limit resets at 00:00 UTC, so try again after that
+- Requesting the same file again counts again, so reuse files you've already downloaded
+
 ### "No data found"
-- **Make sure your dates are from June 2025 or later** (data is available from June 2025 onwards)
+- **Make sure your date is within the last 180 days.** Older games are archived; if you need them, send me a message on Metafy
 - Try a different date range
 - Check that the format code is correct
 - Make sure there were games played on those dates
